@@ -50,4 +50,8 @@ interface PostsRepository {
      * Toggle a postId to be a favorite or not.
      */
     suspend fun toggleFavorite(postId: String)
+
+    suspend fun saveRecommendedPosts(posts: List<Post>)
+
+    suspend fun getRecommendedPosts(): List<Post>
 }

@@ -17,8 +17,16 @@
 package com.example.jetnews
 
 import android.app.Application
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.jetnews.data.AppContainer
 import com.example.jetnews.data.AppContainerImpl
+import com.example.jetnews.worker.GetRecommendedPostsWorker
+import java.util.concurrent.TimeUnit
 
 class JetnewsApplication : Application() {
     companion object {
@@ -31,5 +39,20 @@ class JetnewsApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         container = AppContainerImpl(this)
+        setupWorkManagerJob()
+    }
+
+    private fun setupWorkManagerJob() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val periodicWorkRequest = OneTimeWorkRequestBuilder<GetRecommendedPostsWorker>()
+            .setConstraints(constraints)
+            .build()
+
+        WorkManager.getInstance(this).enqueue(
+            periodicWorkRequest
+        )
     }
 }

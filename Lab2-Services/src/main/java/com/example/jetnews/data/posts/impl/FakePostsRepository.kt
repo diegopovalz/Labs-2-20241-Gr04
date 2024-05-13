@@ -39,6 +39,8 @@ class FakePostsRepository : PostsRepository {
 
     private val postsFeed = MutableStateFlow<PostsFeed?>(null)
 
+    private var recommendedPosts: List<Post> = listOf()
+
     // Used to make suspend functions that read and update state safe to call from any thread
 
     override suspend fun getPost(postId: String?): Result<Post> {
@@ -83,4 +85,23 @@ class FakePostsRepository : PostsRepository {
      * This will fail deterministically every 5 requests
      */
     private fun shouldRandomlyFail(): Boolean = ++requestCount % 5 == 0
+
+    override suspend fun saveRecommendedPosts(newRecommendedPosts: List<Post>) {
+        recommendedPosts = newRecommendedPosts
+    }
+
+    override suspend fun getRecommendedPosts(): List<Post> {
+        return recommendedPosts
+    }
+
+    companion object {
+        private var recommendedPosts: List<Post> = listOf()
+        fun saveRecommended(newRecommendedPosts: List<Post>) {
+            recommendedPosts = newRecommendedPosts
+        }
+
+        fun getRecommended(): List<Post> {
+            return recommendedPosts
+        }
+    }
 }

@@ -62,4 +62,12 @@ class BlockingFakePostsRepository : PostsRepository {
     override suspend fun toggleFavorite(postId: String) {
         favorites.update { it.addOrRemove(postId) }
     }
+
+    override suspend fun saveRecommendedPosts(posts: List<Post>) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getRecommendedPosts(): List<Post> {
+        TODO("Not yet implemented")
+    }
 }

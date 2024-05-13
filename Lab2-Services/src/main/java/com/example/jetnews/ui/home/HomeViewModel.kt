@@ -25,6 +25,7 @@ import com.example.jetnews.data.Result
 import com.example.jetnews.data.interests.RandomUserApi
 import com.example.jetnews.data.posts.FakeNewsApi
 import com.example.jetnews.data.posts.PostsRepository
+import com.example.jetnews.data.posts.impl.FakePostsRepository
 import com.example.jetnews.model.Post
 import com.example.jetnews.model.PostsFeed
 import com.example.jetnews.model.mapArticlesToPosts
@@ -164,10 +165,10 @@ class HomeViewModel(
 
         viewModelScope.launch {
             val result = postsRepository.getPostsFeed()
-            val response = FakeNewsApi.service.getFakeNews(10, 1, "co", "3f10a8d63a5c4d058f6848d8e0e1d41c") // Fetch data from API
-            val recommendedPosts = mapArticlesToPosts(response.articles)
-            Log.d("API_CALL", "GOT HERE")
-            Log.d("API_CALL", recommendedPosts.toString())
+            val recommendedPosts = FakePostsRepository.getRecommended()
+            if (recommendedPosts.isEmpty()) {
+                refreshPosts()
+            }
             viewModelState.update {
                 when (result) {
                     is Result.Success -> {
